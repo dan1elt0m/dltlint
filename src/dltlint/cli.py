@@ -60,8 +60,9 @@ def main(argv: list[str] | None = None) -> int:
     # CLI override of fail_on
     fail_on = Severity(args.fail_on) if args.fail_on else cfg.fail_on
 
+    input_paths = args.paths if args.paths else ["."]
     # 1) Find matching files first
-    matched_files = find_pipeline_files(args.paths)
+    matched_files = find_pipeline_files(input_paths)
     if not matched_files:
         if not args.quiet and args.format == "pretty":
             print("dltlint: no matching .pipeline.yml/.pipeline.yaml files found")
