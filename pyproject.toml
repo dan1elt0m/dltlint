@@ -30,9 +30,7 @@ dltlint = "dltlint.cli:main"
 packages = ["src/dltlint"]
 
 [tool.hatch.build.targets.wheel]
-packages = [
-    { include = "dltlint", from = "src" }
-]
+packages = ["src/dltlint"]
 
 [tool.hatch.build.targets.sdist]
 include = [
