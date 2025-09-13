@@ -28,6 +28,20 @@ dltlint = "dltlint.cli:main"
 [tool.hatch.build]
 packages = ["src/dltlint"]
 
+[tool.hatch.build.targets.wheel]
+packages = [
+    { include = "dltlint", from = "src" }
+]
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "src/dltlint",
+  "README.md",
+  "LICENSE",
+  ".pre-commit-hooks.yaml",
+  "pyproject.toml",
+]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
