@@ -47,8 +47,8 @@ jobs:
         git config --local user.name "Bumpversion"
 
         # Version bump
-
-        NEW_VERSION=$(uv version --bump ${BUMP_LEVEL})
+        uv version --bump ${BUMP_LEVEL}
+        NEW_VERSION=$(uv version --short)
         echo ${NEW_VERSION}
         git add pyproject.toml uv.lock
         git commit -m "Bump version to ${NEW_VERSION}"
