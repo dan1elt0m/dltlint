@@ -3,5 +3,5 @@
   entry: dltlint
   language: python
   types: [yaml, json]
-  pass_filenames: true
+  pass_filenames: false
   description: "Lint Databricks DLT pipeline YAML/JSON files"
