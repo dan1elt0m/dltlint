@@ -26,15 +26,12 @@ Issues = "https://github.com/dan1elt0m/dltlint/issues"
 [project.scripts]
 dltlint = "dltlint.cli:main"
 
-[tool.hatch.build]
-packages = ["src/dltlint"]
-
 [tool.hatch.build.targets.wheel]
 packages = ["src/dltlint"]
 
 [tool.hatch.build.targets.sdist]
 include = [
-  "src/dltlint",
+  "src",
   "README.md",
   "LICENSE",
   ".pre-commit-hooks.yaml",
