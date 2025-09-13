@@ -1,10 +1,9 @@
-from __future__ import annotations
-
 import subprocess
 import sys
 from pathlib import Path
 
 import pytest
+
 from dltlint.config import ToolConfig, load_config
 from dltlint.core import lint_paths
 from dltlint.models import Severity

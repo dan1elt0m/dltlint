@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 
+import tomli
+
 from .models import Severity
 
 
@@ -30,8 +32,6 @@ def _read_pyproject(start: Path) -> dict | None:
     for parent in [cur, *cur.parents]:
         pp = parent / "pyproject.toml"
         if pp.exists():
-            import tomli  # type: ignore
-
             with pp.open("rb") as f:
                 return tomli.load(f)
     return None
