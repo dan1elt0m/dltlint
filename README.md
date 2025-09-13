@@ -39,13 +39,10 @@ Add to your repo’s .pre-commit-config.yaml:
 ```
 repos:
   - repo: https://github.com/dan1elt0m/dltlint
-    rev: v0.0.1        # tag or commit
+    rev: v0.2.1        
     hooks:
       - id: dltlint
-        # By default the hook runs from repo root and scans recursively.
-        # If you prefer to pass staged files only, uncomment:
-        # pass_filenames: true
-        # args: ["--fail-on", "error"]
+
 ```
 
 ## Config (pyproject.toml)
