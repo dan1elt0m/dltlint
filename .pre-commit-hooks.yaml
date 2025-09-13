@@ -1,0 +1,7 @@
+- id: dltlint
+  name: dltlint (DLT pipeline linter)
+  entry: dltlint
+  language: python
+  types: [yaml, json]
+  pass_filenames: true
+  description: "Lint Databricks DLT pipeline YAML/JSON files"
