@@ -1,11 +1,15 @@
 from __future__ import annotations
+
 from pathlib import Path
+
 from dltlint.core import lint_paths
+
 
 def write(p: Path, name: str, text: str) -> Path:
     f = p / name
     f.write_text(text, encoding="utf-8")
     return f
+
 
 def test_clusters_ok_num_workers(tmp_path: Path):
     y = """
@@ -22,6 +26,7 @@ clusters:
     findings = lint_paths([str(tmp_path)])
     assert findings == [], [f"{x.code}:{x.path}" for x in findings]
 
+
 def test_clusters_ok_autoscale(tmp_path: Path):
     y = """
 name: n
@@ -33,6 +38,7 @@ clusters:
     write(tmp_path, "cl_ok2.pipeline.yml", y)
     findings = lint_paths([str(tmp_path)])
     assert findings == [], [f"{x.code}:{x.path}" for x in findings]
+
 
 def test_clusters_fail_cases(tmp_path: Path):
     y = """

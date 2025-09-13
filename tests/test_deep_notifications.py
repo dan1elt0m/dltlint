@@ -1,11 +1,15 @@
 from __future__ import annotations
+
 from pathlib import Path
+
 from dltlint.core import lint_paths
+
 
 def write(p: Path, name: str, text: str) -> Path:
     f = p / name
     f.write_text(text, encoding="utf-8")
     return f
+
 
 def test_notifications_ok(tmp_path: Path):
     y = """
@@ -20,6 +24,7 @@ notifications:
     write(tmp_path, "notif_ok.pipeline.yml", y)
     findings = lint_paths([str(tmp_path)])
     assert findings == [], [f"{x.code}:{x.path}" for x in findings]
+
 
 def test_notifications_fail(tmp_path: Path):
     y = """

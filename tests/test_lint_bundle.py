@@ -113,6 +113,7 @@ resources:
     findings = lint_paths([str(tmp_path)])
     assert findings != [], f"Expected no findings, got: {[f.code for f in findings]}"
 
+
 def test_bundle_scrambled_pipeline_and_misplaced_scalars(tmp_path: Path):
     # Bundle-style scrambled:
     # - Missing 'name' inside pipeline object -> DLT400 (on pipeline object path)
@@ -141,8 +142,11 @@ resources:
     paths = {f.path for f in findings}
 
     assert "DLT400" in codes, f"Expected missing name warning (DLT400). Got: {codes}"
-    assert any(".resources.pipelines.ocpp_bronze_pipeline" in p for p in paths if "DLT400" in {f.code for f in findings if f.path == p}), \
-        f"Expected DLT400 at pipeline object path. Got: {paths}"
+    assert any(
+        ".resources.pipelines.ocpp_bronze_pipeline" in p
+        for p in paths
+        if "DLT400" in {f.code for f in findings if f.path == p}
+    ), f"Expected DLT400 at pipeline object path. Got: {paths}"
     assert "DLT104" in codes, f"Expected 'trigger' must be mapping (DLT104). Got: {codes}"
     assert "DLT002" in codes, f"Expected misplaced scalar under resources.pipelines (DLT002). Got: {codes}"
     assert "DLT420" in codes, f"Expected libraries entry must be object (DLT420). Got: {codes}"

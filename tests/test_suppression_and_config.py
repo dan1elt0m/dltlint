@@ -5,7 +5,6 @@ import sys
 from pathlib import Path
 
 import pytest
-
 from dltlint.config import ToolConfig, load_config
 from dltlint.core import lint_paths
 from dltlint.models import Severity
@@ -20,6 +19,7 @@ def w(p: Path, name: str, text: str) -> Path:
 # ----------------------------
 # Inline suppressions (default token)
 # ----------------------------
+
 
 def test_inline_suppressions_disable_specific_rules(tmp_path: Path):
     # This file would normally emit:
@@ -58,6 +58,7 @@ bogus: true
 # Custom suppression token via pyproject
 # ----------------------------
 
+
 def test_custom_inline_token_from_pyproject(tmp_path: Path):
     # Configure a custom token and use it in the file
     pp = """
@@ -87,6 +88,7 @@ bogus: true
 # pyproject: ignore list
 # ----------------------------
 
+
 def test_pyproject_ignore_list(tmp_path: Path):
     # Ignore DLT010 and DLT400 from config
     pp = """
@@ -112,6 +114,7 @@ bogus: true  # would trigger DLT010
 # pyproject: severity overrides
 # ----------------------------
 
+
 def test_pyproject_severity_override(tmp_path: Path):
     # Promote DLT400 from WARNING to ERROR
     pp = """
@@ -136,6 +139,7 @@ schema: s
 # ----------------------------
 # pyproject: require fields
 # ----------------------------
+
 
 def test_pyproject_require_fields_standalone(tmp_path: Path):
     # Require 'catalog' and 'schema'; the file omits 'catalog'
@@ -183,6 +187,7 @@ resources:
 # CLI doc generation smoke test
 # ----------------------------
 
+
 @pytest.mark.parametrize("fname", ["RULES.md", "docs_rules.md"])
 def test_cli_gen_rules(tmp_path: Path, fname: str):
     out_path = tmp_path / fname
@@ -191,6 +196,7 @@ def test_cli_gen_rules(tmp_path: Path, fname: str):
         cwd=tmp_path,
         capture_output=True,
         text=True,
+        check=False,
     )
     assert cp.returncode == 0, cp.stderr
     assert out_path.exists(), "RULES.md should be created"

@@ -1,21 +1,20 @@
 from __future__ import annotations
-import importlib.metadata
 
 import argparse
+import importlib.metadata
 import json
 import sys
 from pathlib import Path
-from typing import List
 
 from .config import load_config
-from .core import lint_paths, severity_rank, find_pipeline_files
-from .models import Severity
+from .core import find_pipeline_files, lint_paths, severity_rank
+from .models import Finding, Severity
 from .registry import rules_markdown
 
 __version__ = importlib.metadata.version("dltlint")
 
 
-def _pretty(findings) -> None:
+def _pretty(findings: list[Finding]) -> None:
     for x in findings:
         sym = {Severity.ERROR: "✖", Severity.WARNING: "⚠", Severity.INFO: "ℹ"}[Severity(x.severity)]
         print(f"{sym} {x.code} {x.path}: {x.message}")
@@ -23,9 +22,17 @@ def _pretty(findings) -> None:
 
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description="Linter for Databricks Lakeflow (DLT) pipeline YAML/JSON configs")
-    p.add_argument("paths", nargs="*", help="Files or directories. Files must end with .pipeline.yml/.pipeline.yaml; directories are searched recursively.")
+    p.add_argument(
+        "paths",
+        nargs="*",
+        help="Files or directories. Files must end with .pipeline.yml/.pipeline.yaml; directories are searched recursively.",
+    )
     p.add_argument("--format", choices=["pretty", "json"], default="pretty", help="Output format (default: pretty)")
-    p.add_argument("--fail-on", choices=[s.value for s in Severity], help="Exit non-zero if any finding at or above this severity is present (default: from config or 'error')")
+    p.add_argument(
+        "--fail-on",
+        choices=[s.value for s in Severity],
+        help="Exit non-zero if any finding at or above this severity is present (default: from config or 'error')",
+    )
     p.add_argument("--quiet", action="store_true", help="Suppress 'no files found' message (still exits 0)")
     p.add_argument("--ok", action="store_true", help="Print a success message when no findings are found")
     p.add_argument("--version", action="store_true", help="Print version and exit")
@@ -33,7 +40,7 @@ def build_parser() -> argparse.ArgumentParser:
     return p
 
 
-def main(argv: List[str] | None = None) -> int:
+def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
 

@@ -64,6 +64,7 @@ resources:
     codes = [f.code for f in findings]
     assert "DLT010" not in codes, f"Unexpected unknown-field warning(s): {codes}"
 
+
 def test_standalone_scrambled_mixed_modes_bad_types_and_trigger(tmp_path: Path):
     # Intentionally scrambled standalone config:
     # - Both modern (catalog/schema) and legacy (target/storage) -> DLT300

@@ -1,11 +1,15 @@
 from __future__ import annotations
+
 from pathlib import Path
+
 from dltlint.core import lint_paths
+
 
 def write(p: Path, name: str, text: str) -> Path:
     f = p / name
     f.write_text(text, encoding="utf-8")
     return f
+
 
 def test_libraries_ok_various_kinds(tmp_path: Path):
     y = """
@@ -23,6 +27,7 @@ libraries:
     write(tmp_path, "libs_ok.pipeline.yml", y)
     findings = lint_paths([str(tmp_path)])
     assert findings == [], [f"{x.code}:{x.path}" for x in findings]
+
 
 def test_libraries_fail_missing_path_and_multi_kind(tmp_path: Path):
     y = """

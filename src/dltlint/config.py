@@ -1,10 +1,7 @@
 from __future__ import annotations
 
-import os
-import sys
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List, Optional
 
 from .models import Severity
 
@@ -12,18 +9,18 @@ from .models import Severity
 @dataclass
 class ToolConfig:
     fail_on: Severity = Severity.ERROR
-    ignore: List[str] = field(default_factory=list)           # e.g., ["DLT010", "DLT400"]
-    require: List[str] = field(default_factory=list)          # e.g., ["catalog", "schema"]
-    severity_overrides: Dict[str, Severity] = field(default_factory=dict)  # {"DLT400": "info"}
+    ignore: list[str] = field(default_factory=list)  # e.g., ["DLT010", "DLT400"]
+    require: list[str] = field(default_factory=list)  # e.g., ["catalog", "schema"]
+    severity_overrides: dict[str, Severity] = field(default_factory=dict)  # {"DLT400": "info"}
 
-    inline_disable_token: str = "dltlint: disable"            # comment token for inline suppression
+    inline_disable_token: str = "dltlint: disable"  # comment token for inline suppression
 
 
 def _coerce_severity(x: str) -> Severity:
     return Severity(x.lower())
 
 
-def _read_pyproject(start: Path) -> Optional[dict]:
+def _read_pyproject(start: Path) -> dict | None:
     """
     Load nearest pyproject.toml and return parsed dict or None.
     Uses tomllib (3.11+) or tomli (<3.11).
@@ -33,14 +30,10 @@ def _read_pyproject(start: Path) -> Optional[dict]:
     for parent in [cur, *cur.parents]:
         pp = parent / "pyproject.toml"
         if pp.exists():
-            if sys.version_info >= (3, 11):
-                import tomllib
-                with pp.open("rb") as f:
-                    return tomllib.load(f)
-            else:
-                import tomli  # type: ignore
-                with pp.open("rb") as f:
-                    return tomli.load(f)
+            import tomli  # type: ignore
+
+            with pp.open("rb") as f:
+                return tomli.load(f)
     return None
 
 
@@ -55,11 +48,11 @@ def load_config(cwd: Path) -> ToolConfig:
     if isinstance(table.get("fail_on"), str):
         cfg.fail_on = _coerce_severity(table["fail_on"])
     if isinstance(table.get("ignore"), list):
-        cfg.ignore = [str(x).strip() for x in table["ignore"] if isinstance(x, (str, int))]
+        cfg.ignore = [str(x).strip() for x in table["ignore"] if isinstance(x, str | int)]
     if isinstance(table.get("require"), list):
         cfg.require = [str(x).strip() for x in table["require"] if isinstance(x, str)]
     if isinstance(table.get("severity_overrides"), dict):
-        out: Dict[str, Severity] = {}
+        out: dict[str, Severity] = {}
         for k, v in table["severity_overrides"].items():
             try:
                 out[str(k).strip()] = _coerce_severity(str(v))
@@ -74,7 +67,7 @@ def load_config(cwd: Path) -> ToolConfig:
     return cfg
 
 
-def read_inline_suppressions(path: Path, token: str) -> List[str]:
+def read_inline_suppressions(path: Path, token: str) -> list[str]:
     """
     File-level inline suppressions: any line containing e.g.
       # dltlint: disable=DLT010,DLT400
@@ -86,7 +79,7 @@ def read_inline_suppressions(path: Path, token: str) -> List[str]:
         txt = path.read_text(encoding="utf-8", errors="ignore")
     except Exception:
         return []
-    codes: List[str] = []
+    codes: list[str] = []
     for line in txt.splitlines():
         if token in line:
             # extract after token; allow comma or space separated

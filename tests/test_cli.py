@@ -20,6 +20,7 @@ def run_cli(tmp_path: Path, *args: str) -> subprocess.CompletedProcess:
         cwd=tmp_path,
         capture_output=True,
         text=True,
+        check=False,
     )
 
 

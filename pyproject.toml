@@ -3,7 +3,7 @@ name = "dltlint"
 version = "0.1.0"
 description = "Linter for Databricks DLT pipelines"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
     "pydantic>=2",
     "pyyaml>=6",
@@ -32,12 +32,14 @@ build-backend = "hatchling.build"
 
 [tool.ruff]
 lint.ignore = [
+    "RUF001",
     "FBT001",
     "FBT002",
     "FBT003",
     "N815",
     "DTZ007",
     "TRY003",
+    "T201",
     "A003",    # shadow built-in types
     "ANN002",  # type annotation for **kwargs
     "ANN003",  # type annotation for *args
@@ -47,7 +49,9 @@ lint.ignore = [
     "DTZ",     # timezone information in datetimes
     "RUF012",  # causes failures in pydantic models
     "PLR0911", # for some reason can't ignore this on func definition
-    "COM812", "ISC001" # causes failures in ruff format
+    "COM812", "ISC001", # causes failures in ruff format
+    "BLE001",
+    "PLR0912" # too many branches
 ]
 lint.extend-select = [
     "UP",

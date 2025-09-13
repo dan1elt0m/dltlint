@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import Any, Dict
+from typing import Any
 
 from pydantic import BaseModel
 
@@ -18,6 +18,6 @@ class Finding(BaseModel):
     path: str
     severity: Severity = Severity.ERROR
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self: Finding) -> dict[str, Any]:
         # Convenience for callers; uses Pydantic v2 model_dump under the hood
         return self.model_dump()
