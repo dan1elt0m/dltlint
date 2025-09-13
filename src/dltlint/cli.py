@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import importlib.metadata
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -60,7 +61,9 @@ def main(argv: list[str] | None = None) -> int:
     # CLI override of fail_on
     fail_on = Severity(args.fail_on) if args.fail_on else cfg.fail_on
 
-    input_paths = args.paths if args.paths else ["."]
+    # Force root scan if invoked via: pre-commit run --all-files
+    input_paths = ["."] if os.getenv("PRE_COMMIT_RUN_ALL_FILES") == "true" else args.paths if args.paths else ["."]
+
     # 1) Find matching files first
     matched_files = find_pipeline_files(input_paths)
     if not matched_files:
