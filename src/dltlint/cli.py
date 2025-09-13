@@ -73,7 +73,7 @@ def main(argv: list[str] | None = None) -> int:
 
     # 2) Lint with config applied (config.ignore, severity_overrides, inline suppressions, require)
     try:
-        findings = lint_paths(args.paths, cfg=cfg)
+        findings = lint_paths(input_paths, cfg=cfg)
     except Exception as e:
         print(str(e), file=sys.stderr)
         return 2
