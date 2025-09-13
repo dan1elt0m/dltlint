@@ -14,13 +14,13 @@ pip install dltlint
 dltlint 
 
 # JSON output for tooling
-dltlint --format json .
+dltlint --format json 
 
 # Fail build on warnings or worse
-dltlint --fail-on warning .
+dltlint --fail-on warning 
 
 # Print a success message when clean (otherwise silent on success)
-dltlint --ok .
+dltlint --ok 
 ```
 
 Exit codes
