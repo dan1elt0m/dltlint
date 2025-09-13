@@ -105,10 +105,7 @@ def _type_name(x: Any) -> str:  # noqa ANN401
     return type(x).__name__
 
 
-# ---- Deep validators (same as previous answer; omitted here for brevity) ---
-# Paste your _validate_libraries/_validate_notifications/_validate_clusters
-# from the previous version here, unchanged.
-
+# ---- Deep validators  ---
 
 def _validate_libraries(doc: dict[str, Any], root: str) -> list[Finding]:
     f: list[Finding] = []
