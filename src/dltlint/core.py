@@ -48,7 +48,6 @@ KNOWN_FIELDS_STANDALONE: dict[str, Any] = {
     "trigger": dict,
     "resources": dict,
     "pipelines.trigger.interval": str,
-    "serverless": bool,
 }
 
 
@@ -72,6 +71,7 @@ KNOWN_FIELDS_PIPELINE_OBJ: dict[str, Any] = {
     "maxFlowRetryAttempts": int,
     "numUpdateRetryAttempts": int,
     "trigger": dict,
+    "serverless": bool,
 }
 
 CLUSTER_FORBIDDEN_FIELDS = {
