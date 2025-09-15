@@ -144,6 +144,7 @@ resources:
   pipelines:
     p1:
       name: bronze
+      serverless: true
       catalog: main
       schema: bronze
       trigger:

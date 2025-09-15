@@ -48,6 +48,7 @@ KNOWN_FIELDS_STANDALONE: dict[str, Any] = {
     "trigger": dict,
     "resources": dict,
     "pipelines.trigger.interval": str,
+    "serverless": bool,
 }
 
 
