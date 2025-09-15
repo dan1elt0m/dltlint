@@ -4,7 +4,7 @@ version = "0.2.1"
 description = "Linter for Databricks DLT pipelines"
 authors = [{ name = "Daniel Tom", email = "detom89@gmail.com"}]
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 dependencies = [
     "pydantic>=2",
     "pyyaml>=6",
