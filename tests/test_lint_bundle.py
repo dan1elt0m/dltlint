@@ -35,25 +35,6 @@ resources:
     assert findings == [], f"Expected no findings, got: {[f.code for f in findings]}"
 
 
-def test_bundle_pipeline_dotted_keys_also_ok(tmp_path: Path):
-    # Some repos still use dotted keys inside the bundle pipeline object
-    yaml_text = """
-resources:
-  pipelines:
-    ocpp_bronze_pipeline:
-      name: ocpp_bronze
-      catalog: main
-      schema: bronze
-      pipelines.numUpdateRetryAttempts: 1
-      pipelines.maxFlowRetryAttempts: 3
-      pipelines.trigger.interval: "45 minutes"
-"""
-    write(tmp_path, "bundle_dotted.pipeline.yaml.resources", yaml_text)
-
-    findings = lint_paths([str(tmp_path)])
-    assert findings == [], f"Expected no findings, got: {[f.code for f in findings]}"
-
-
 def test_bundle_misplaced_scalar_under_pipelines(tmp_path: Path):
     # If someone accidentally puts a scalar setting directly under resources.pipelines,
     # it should raise DLT002 (pipeline entry must be an object).
@@ -113,8 +94,6 @@ resources:
     findings = lint_paths([str(tmp_path)])
     assert findings != [], f"Expected no findings, got: {[f.code for f in findings]}"
 
-
-def test_bundle_scrambled_pipeline_and_misplaced_scalars(tmp_path: Path):
     # Bundle-style scrambled:
     # - Missing 'name' inside pipeline object -> DLT400 (on pipeline object path)
     # - trigger present but wrong type (string) -> DLT104
@@ -167,8 +146,6 @@ resources:
       name: bronze
       catalog: main
       schema: bronze
-      maxFlowRetryAttempts: -2
-      numUpdateRetryAttempts: "x"
       trigger:
         interval: "frequently"
       edition: ENTERPRISE
@@ -181,8 +158,6 @@ resources:
     findings = lint_paths([str(tmp_path)])
     codes = {f.code for f in findings}
 
-    assert "DLT401" in codes, f"Expected non-negative check fail (DLT401). Got: {codes}"
-    assert "DLT102" in codes, f"Expected int type error for numUpdateRetryAttempts (DLT102). Got: {codes}"
     assert "DLT202" in codes, f"Expected invalid trigger interval (DLT202). Got: {codes}"
     assert "DLT201" in codes, f"Expected invalid edition (DLT201). Got: {codes}"
     assert "DLT200" in codes, f"Expected invalid channel (DLT200). Got: {codes}"

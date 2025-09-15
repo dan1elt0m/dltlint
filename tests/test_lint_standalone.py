@@ -17,8 +17,6 @@ def test_standalone_classic_ok(tmp_path: Path):
 name: ocpp_bronze
 catalog: main
 schema: bronze
-pipelines.numUpdateRetryAttempts: 1
-pipelines.maxFlowRetryAttempts: 3
 pipelines.trigger.interval: "1 hour"
 libraries:
   - file:
@@ -117,7 +115,8 @@ name: ok
 catalog: main
 schema: bronze
 pipelines.trigger.interval: "every once in a while"
-pipelines.numUpdateRetryAttempts: "not_an_int"
+configuration:
+    pipelines.numUpdateRetryAttempts: "not_an_int"
 """
     write(tmp_path, "scrambled_standalone2.pipeline.yml", text)
 

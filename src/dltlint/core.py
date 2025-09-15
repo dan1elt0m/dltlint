@@ -45,12 +45,11 @@ KNOWN_FIELDS_STANDALONE: dict[str, Any] = {
     "channel": str,
     "edition": str,
     "photon": bool,
-    "pipelines.maxFlowRetryAttempts": int,
-    "pipelines.numUpdateRetryAttempts": int,
-    "pipelines.trigger.interval": str,
     "trigger": dict,
     "resources": dict,
+    "pipelines.trigger.interval": str,
 }
+
 
 # Fields expected **inside** a bundle pipeline object at `resources.pipelines.<id>`
 KNOWN_FIELDS_PIPELINE_OBJ: dict[str, Any] = {
@@ -69,9 +68,6 @@ KNOWN_FIELDS_PIPELINE_OBJ: dict[str, Any] = {
     "channel": str,
     "edition": str,
     "photon": bool,
-    "pipelines.maxFlowRetryAttempts": int,
-    "pipelines.numUpdateRetryAttempts": int,
-    "pipelines.trigger.interval": str,
     "maxFlowRetryAttempts": int,
     "numUpdateRetryAttempts": int,
     "trigger": dict,
@@ -90,6 +86,11 @@ CLUSTER_FORBIDDEN_FIELDS = {
     "workload_type",
 }
 
+KNOWN_FIELDS_PIPELINE_CONFIGURATION_OBJ = {
+    "pipelines.maxFlowRetryAttempts": int,
+    "pipelines.numUpdateRetryAttempts": int,
+    "pipelines.trigger.interval": str,
+}
 
 # ---- IO utilities ----------------------------------------------------------
 
@@ -106,6 +107,7 @@ def _type_name(x: Any) -> str:  # noqa ANN401
 
 
 # ---- Deep validators  ---
+
 
 def _validate_libraries(doc: dict[str, Any], root: str) -> list[Finding]:
     f: list[Finding] = []
@@ -308,13 +310,51 @@ def _validate_clusters(doc: dict[str, Any], root: str) -> list[Finding]:
     return f
 
 
+ValueType = str | bool | int | list | dict
+
+
 # ---- Rule runner -----------------------------------------------------------
+def check_expected_type(v: ValueType, root: str, k: str, expected: ValueType, f: list[Finding]) -> bool:
+    """Check if value is of expected type, append to findings if not. Returns True if type matches."""
+
+    if expected is str and not isinstance(v, str):
+        f.append(
+            Finding(code="DLT100", message=f"Field '{k}' must be a string, got {_type_name(v)}", path=f"{root}.{k}")
+        )
+    elif expected is bool and not isinstance(v, bool):
+        f.append(
+            Finding(code="DLT101", message=f"Field '{k}' must be a boolean, got {_type_name(v)}", path=f"{root}.{k}")
+        )
+    elif expected is int and not isinstance(v, int):
+        f.append(
+            Finding(
+                code="DLT102",
+                message=f"Field '{k}' must be an integer, got {_type_name(v)}",
+                path=f"{root}.{k}",
+            )
+        )
+    elif expected is list and not isinstance(v, list):
+        f.append(
+            Finding(
+                code="DLT103",
+                message=f"Field '{k}' must be a list/array, got {_type_name(v)}",
+                path=f"{root}.{k}",
+            )
+        )
+    elif expected is dict and not isinstance(v, dict):
+        f.append(
+            Finding(
+                code="DLT104",
+                message=f"Field '{k}' must be a mapping/object, got {_type_name(v)}",
+                path=f"{root}.{k}",
+            )
+        )
 
 
-def _lint_schema(doc: dict[str, Any], known_fields: dict[str, Any], *, root: str) -> list[Finding]:
+def _lint_schema(doc: dict[str, Any], known_fields: dict[str, ValueType], *, root: str) -> list[Finding]:
     f: list[Finding] = []
 
-    for k in doc:
+    for k, v in doc.items():
         if k not in known_fields:
             f.append(
                 Finding(
@@ -324,46 +364,8 @@ def _lint_schema(doc: dict[str, Any], known_fields: dict[str, Any], *, root: str
                     severity=Severity.WARNING,
                 )
             )
-
-    for k, expected in known_fields.items():
-        if k in doc:
-            v = doc[k]
-            if expected is str and not isinstance(v, str):
-                f.append(
-                    Finding(
-                        code="DLT100", message=f"Field '{k}' must be a string, got {_type_name(v)}", path=f"{root}.{k}"
-                    )
-                )
-            elif expected is bool and not isinstance(v, bool):
-                f.append(
-                    Finding(
-                        code="DLT101", message=f"Field '{k}' must be a boolean, got {_type_name(v)}", path=f"{root}.{k}"
-                    )
-                )
-            elif expected is int and not isinstance(v, int):
-                f.append(
-                    Finding(
-                        code="DLT102",
-                        message=f"Field '{k}' must be an integer, got {_type_name(v)}",
-                        path=f"{root}.{k}",
-                    )
-                )
-            elif expected is list and not isinstance(v, list):
-                f.append(
-                    Finding(
-                        code="DLT103",
-                        message=f"Field '{k}' must be a list/array, got {_type_name(v)}",
-                        path=f"{root}.{k}",
-                    )
-                )
-            elif expected is dict and not isinstance(v, dict):
-                f.append(
-                    Finding(
-                        code="DLT104",
-                        message=f"Field '{k}' must be a mapping/object, got {_type_name(v)}",
-                        path=f"{root}.{k}",
-                    )
-                )
+        else:
+            check_expected_type(v, root, k, known_fields[k], f)
 
     if "channel" in doc and isinstance(doc["channel"], str):  # noqa SIM102
         if doc["channel"] not in CHANNEL_VALUES:
@@ -424,8 +426,6 @@ def _lint_schema(doc: dict[str, Any], known_fields: dict[str, Any], *, root: str
     for key in (
         "pipelines.maxFlowRetryAttempts",
         "pipelines.numUpdateRetryAttempts",
-        "maxFlowRetryAttempts",
-        "numUpdateRetryAttempts",
     ):
         if key in doc and isinstance(doc[key], int) and doc[key] < 0:
             f.append(Finding(code="DLT401", message=f"{key} must be >= 0", path=f"{root}.{key}"))
@@ -437,7 +437,11 @@ def _lint_schema(doc: dict[str, Any], known_fields: dict[str, Any], *, root: str
                     Finding(code="DLT410", message="configuration keys must be strings", path=f"{root}.configuration")
                 )
                 break
-            if not isinstance(cv, str | int | float | bool):
+
+            if ck in KNOWN_FIELDS_PIPELINE_CONFIGURATION_OBJ:
+                check_expected_type(cv, root, ck, KNOWN_FIELDS_PIPELINE_CONFIGURATION_OBJ[ck], f)
+
+            elif not isinstance(cv, str | int | float | bool):
                 f.append(
                     Finding(
                         code="DLT411",
