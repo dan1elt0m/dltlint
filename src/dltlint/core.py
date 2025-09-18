@@ -72,6 +72,7 @@ KNOWN_FIELDS_PIPELINE_OBJ: dict[str, Any] = {
     "numUpdateRetryAttempts": int,
     "trigger": dict,
     "serverless": bool,
+    "environment": dict,
 }
 
 CLUSTER_FORBIDDEN_FIELDS = {
