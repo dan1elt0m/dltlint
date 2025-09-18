@@ -39,7 +39,7 @@ Add to your repo’s .pre-commit-config.yaml:
 ```
 repos:
   - repo: https://github.com/dan1elt0m/dltlint
-    rev: v0.3.2        
+    rev: v0.3.3        
     hooks:
       - id: dltlint
 
