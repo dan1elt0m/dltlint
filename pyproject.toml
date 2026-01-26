@@ -1,6 +1,6 @@
 [project]
 name = "dltlint"
-version = "0.3.5"
+version = "0.3.6"
 description = "Linter for Databricks DLT pipelines"
 authors = [{ name = "Daniel Tom", email = "detom89@gmail.com"}]
 readme = "README.md"
