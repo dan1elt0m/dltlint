@@ -48,6 +48,7 @@ KNOWN_FIELDS_STANDALONE: dict[str, Any] = {
     "trigger": dict,
     "resources": dict,
     "pipelines.trigger.interval": str,
+    "root_path": str,
 }
 
 
@@ -73,6 +74,7 @@ KNOWN_FIELDS_PIPELINE_OBJ: dict[str, Any] = {
     "trigger": dict,
     "serverless": bool,
     "environment": dict,
+    "root_path": str,
 }
 
 CLUSTER_FORBIDDEN_FIELDS = {
