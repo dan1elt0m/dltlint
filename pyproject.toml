@@ -13,10 +13,10 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "pytest",
     "pytest-cov",
     "ruff==0.14.10",
-    "pre-commit"
+    "pre-commit",
+    "pytest>=8.4.2",
 ]
 
 [project.urls]

@@ -329,7 +329,7 @@ def check_expected_type(v: ValueType, root: str, k: str, expected: ValueType, f:
         f.append(
             Finding(code="DLT101", message=f"Field '{k}' must be a boolean, got {_type_name(v)}", path=f"{root}.{k}")
         )
-    elif expected is int and not isinstance(v, int):
+    elif expected is int and not (isinstance(v, int) or (isinstance(v, str) and v.isdigit())):
         f.append(
             Finding(
                 code="DLT102",
