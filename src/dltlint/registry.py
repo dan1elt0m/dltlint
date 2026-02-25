@@ -62,7 +62,7 @@ RULES: dict[str, RuleInfo] = {
         "DLT420", "libraries entry must be object", Severity.ERROR, "Each libraries item must be a mapping."
     ),
     "DLT421": RuleInfo(
-        "DLT421", "library kind missing", Severity.WARNING, "Specify one of notebook|file|jar|whl|maven|pypi."
+        "DLT421", "library kind missing", Severity.WARNING, "Specify one of notebook|file|jar|whl|maven|pypi|glob."
     ),
     "DLT422": RuleInfo("DLT422", "library requires path", Severity.ERROR, "Notebook/file/jar/whl require a path."),
     "DLT423": RuleInfo(
@@ -76,6 +76,12 @@ RULES: dict[str, RuleInfo] = {
     ),
     "DLT426": RuleInfo(
         "DLT426", "invalid pypi spec", Severity.ERROR, "PyPI must include 'package'; optional 'repo' (str)."
+    ),
+    "DLT427": RuleInfo(
+        "DLT427",
+        "invalid glob spec",
+        Severity.ERROR,
+        "Glob must include 'include' with a path ending with '**'.",
     ),
     "DLT431": RuleInfo(
         "DLT431", "forbidden cluster field", Severity.ERROR, "Field is managed by Lakeflow and must not be set."
