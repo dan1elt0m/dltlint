@@ -1,6 +1,9 @@
 # dltlint
 
-Lint Databricks **Lakeflow (DLT)** pipeline YAML/JSON files.
+Lint Databricks **Lakeflow (DLT)** Declrative pipeline YAML/JSON configuration files.
+
+# Why
+The Asset Bundle validate does not check actual configuration values inside pipeline definitions. This library fills that gap and provides clear actionable errors and warning messages.
 
 ## Installation
 
