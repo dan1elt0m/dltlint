@@ -10,7 +10,7 @@
 | `DLT102` | Type error: integer | error | Value must be an integer. |
 | `DLT103` | Type error: list/array | error | Value must be a list/array. |
 | `DLT104` | Type error: mapping/object | error | Value must be a mapping/object. |
-| `DLT200` | Invalid channel | error | Channel must be one of: current, preview. |
+| `DLT200` | Invalid channel | error | Channel must be one of: current, preview, CURRENT, PREVIEW. |
 | `DLT201` | Invalid edition | error | Edition must be one of: CORE, PRO, ADVANCED. |
 | `DLT202` | Invalid trigger interval | error | Trigger interval must be '<n> <unit>' (seconds/minutes/hours/days). |
 | `DLT300` | Legacy vs modern conflict | error | Use either modern (catalog/schema) or legacy (target/storage), not both. |

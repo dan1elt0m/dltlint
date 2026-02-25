@@ -24,7 +24,7 @@ class LintConfig(BaseModel):
 
 # ---- Spec / constants ------------------------------------------------------
 
-CHANNEL_VALUES = {"current", "preview"}
+CHANNEL_VALUES = {"current", "preview", "CURRENT", "PREVIEW"}
 EDITION_VALUES = {"CORE", "PRO", "ADVANCED"}
 TRIGGER_INTERVAL_RE = re.compile(r"^\s*(\d+)\s*(second|seconds|minute|minutes|hour|hours|day|days)\s*$")
 

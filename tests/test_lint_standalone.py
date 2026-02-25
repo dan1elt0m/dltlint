@@ -124,3 +124,57 @@ configuration:
     codes = {f.code for f in findings}
     assert "DLT202" in codes, f"Expected invalid dotted trigger interval (DLT202). Got: {codes}"
     assert "DLT102" in codes, f"Expected integer type for numUpdateRetryAttempts (DLT102). Got: {codes}"
+
+
+def test_standalone_uppercase_channel_values_ok(tmp_path: Path):
+    # Test that uppercase channel values (CURRENT and PREVIEW) are accepted
+    text_current = """
+name: test_pipeline
+catalog: main
+schema: bronze
+channel: CURRENT
+libraries: []
+"""
+    write(tmp_path, "uppercase_current.pipeline.yml", text_current)
+
+    text_preview = """
+name: test_pipeline2
+catalog: main
+schema: bronze
+channel: PREVIEW
+libraries: []
+"""
+    write(tmp_path, "uppercase_preview.pipeline.yml", text_preview)
+
+    findings = lint_paths([str(tmp_path)])
+    codes = {f.code for f in findings}
+    
+    # Should NOT contain DLT200 (invalid channel)
+    assert "DLT200" not in codes, f"Expected no DLT200 errors for uppercase channel values. Got: {codes}"
+
+
+def test_standalone_lowercase_channel_values_ok(tmp_path: Path):
+    # Test that lowercase channel values (current and preview) are still accepted
+    text_current = """
+name: test_pipeline
+catalog: main
+schema: bronze
+channel: current
+libraries: []
+"""
+    write(tmp_path, "lowercase_current.pipeline.yml", text_current)
+
+    text_preview = """
+name: test_pipeline2
+catalog: main
+schema: bronze
+channel: preview
+libraries: []
+"""
+    write(tmp_path, "lowercase_preview.pipeline.yml", text_preview)
+
+    findings = lint_paths([str(tmp_path)])
+    codes = {f.code for f in findings}
+    
+    # Should NOT contain DLT200 (invalid channel)
+    assert "DLT200" not in codes, f"Expected no DLT200 errors for lowercase channel values. Got: {codes}"

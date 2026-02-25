@@ -31,7 +31,7 @@ RULES: dict[str, RuleInfo] = {
     "DLT102": RuleInfo("DLT102", "Type error: integer", Severity.ERROR, "Value must be an integer."),
     "DLT103": RuleInfo("DLT103", "Type error: list/array", Severity.ERROR, "Value must be a list/array."),
     "DLT104": RuleInfo("DLT104", "Type error: mapping/object", Severity.ERROR, "Value must be a mapping/object."),
-    "DLT200": RuleInfo("DLT200", "Invalid channel", Severity.ERROR, "Channel must be one of: current, preview."),
+    "DLT200": RuleInfo("DLT200", "Invalid channel", Severity.ERROR, "Channel must be one of: current, preview, CURRENT, PREVIEW."),
     "DLT201": RuleInfo("DLT201", "Invalid edition", Severity.ERROR, "Edition must be one of: CORE, PRO, ADVANCED."),
     "DLT202": RuleInfo(
         "DLT202",

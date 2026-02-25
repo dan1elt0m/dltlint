@@ -163,3 +163,65 @@ resources:
     assert "DLT201" in codes, f"Expected invalid edition (DLT201). Got: {codes}"
     assert "DLT200" in codes, f"Expected invalid channel (DLT200). Got: {codes}"
     assert "DLT410" in codes, f"Expected configuration key must be string (DLT410). Got: {codes}"
+
+
+def test_bundle_uppercase_channel_values_ok(tmp_path: Path):
+    # Test that uppercase channel values (CURRENT and PREVIEW) are accepted in bundles
+    text_current = """
+resources:
+  pipelines:
+    p1:
+      name: test_pipeline
+      catalog: main
+      schema: bronze
+      channel: CURRENT
+"""
+    write(tmp_path, "bundle_uppercase_current.pipeline.yaml.resources", text_current)
+
+    text_preview = """
+resources:
+  pipelines:
+    p2:
+      name: test_pipeline2
+      catalog: main
+      schema: bronze
+      channel: PREVIEW
+"""
+    write(tmp_path, "bundle_uppercase_preview.pipeline.yaml.resources", text_preview)
+
+    findings = lint_paths([str(tmp_path)])
+    codes = {f.code for f in findings}
+    
+    # Should NOT contain DLT200 (invalid channel)
+    assert "DLT200" not in codes, f"Expected no DLT200 errors for uppercase channel values. Got: {codes}"
+
+
+def test_bundle_lowercase_channel_values_ok(tmp_path: Path):
+    # Test that lowercase channel values (current and preview) are still accepted in bundles
+    text_current = """
+resources:
+  pipelines:
+    p1:
+      name: test_pipeline
+      catalog: main
+      schema: bronze
+      channel: current
+"""
+    write(tmp_path, "bundle_lowercase_current.pipeline.yaml.resources", text_current)
+
+    text_preview = """
+resources:
+  pipelines:
+    p2:
+      name: test_pipeline2
+      catalog: main
+      schema: bronze
+      channel: preview
+"""
+    write(tmp_path, "bundle_lowercase_preview.pipeline.yaml.resources", text_preview)
+
+    findings = lint_paths([str(tmp_path)])
+    codes = {f.code for f in findings}
+    
+    # Should NOT contain DLT200 (invalid channel)
+    assert "DLT200" not in codes, f"Expected no DLT200 errors for lowercase channel values. Got: {codes}"
