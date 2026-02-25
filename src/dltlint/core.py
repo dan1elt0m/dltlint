@@ -118,7 +118,7 @@ def _validate_libraries(doc: dict[str, Any], root: str) -> list[Finding]:
     libs = doc.get("libraries")
     if not isinstance(libs, list):
         return f
-    kinds = ["notebook", "file", "jar", "whl", "maven", "pypi"]
+    kinds = ["notebook", "file", "jar", "whl", "maven", "pypi", "glob"]
     for i, item in enumerate(libs):
         loc = f"{root}.libraries[{i}]"
         if not isinstance(item, dict):
@@ -129,7 +129,7 @@ def _validate_libraries(doc: dict[str, Any], root: str) -> list[Finding]:
             f.append(
                 Finding(
                     code="DLT421",
-                    message="library should specify one of: notebook|file|jar|whl|maven|pypi",
+                    message="library should specify one of: notebook|file|jar|whl|maven|pypi|glob",
                     path=loc,
                     severity=Severity.WARNING,
                 )
@@ -194,6 +194,24 @@ def _validate_libraries(doc: dict[str, Any], root: str) -> list[Finding]:
                 )
             elif "repo" in o and not isinstance(o["repo"], str):
                 f.append(Finding(code="DLT426", message="pypi.repo must be a string", path=f"{loc}.pypi.repo"))
+        elif kind == "glob":
+            o = item[kind]
+            if not isinstance(o, dict) or not isinstance(o.get("include"), str):
+                f.append(
+                    Finding(
+                        code="DLT427",
+                        message="glob requires object with 'include' (e.g., 'src/**')",
+                        path=loc,
+                    )
+                )
+            elif not o["include"].endswith("**"):
+                f.append(
+                    Finding(
+                        code="DLT427",
+                        message="glob.include must be a path ending with '**'",
+                        path=f"{loc}.glob.include",
+                    )
+                )
     return f
 
 

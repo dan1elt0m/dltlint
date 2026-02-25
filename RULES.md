@@ -19,11 +19,12 @@
 | `DLT410` | configuration keys must be strings | error | All configuration keys must be strings. |
 | `DLT411` | configuration values should be scalars | warning | Prefer string/number/bool values for configuration. |
 | `DLT420` | libraries entry must be object | error | Each libraries item must be a mapping. |
-| `DLT421` | library kind missing | warning | Specify one of notebook|file|jar|whl|maven|pypi. |
+| `DLT421` | library kind missing | warning | Specify one of notebook|file|jar|whl|maven|pypi|glob. |
 | `DLT422` | library requires path | error | Notebook/file/jar/whl require a path. |
 | `DLT423` | multiple library kinds | warning | Specify exactly one library kind per item. |
 | `DLT425` | invalid maven spec | error | Maven must include 'coordinates'; optional 'exclusions' (list[str]) and 'repo' (str). |
 | `DLT426` | invalid pypi spec | error | PyPI must include 'package'; optional 'repo' (str). |
+| `DLT427` | invalid glob spec | error | Glob must include 'include' with a path ending with '**'. |
 | `DLT431` | forbidden cluster field | error | Field is managed by Lakeflow and must not be set. |
 | `DLT440` | notification entry must be object | error | Each notification must be a mapping. |
 | `DLT450` | invalid email_recipients | error | Provide a non-empty list of string recipients. |

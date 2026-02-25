@@ -23,6 +23,7 @@ libraries:
   - whl: { path: ./dist/x.whl }
   - maven: { coordinates: "org.slf4j:slf4j-api:2.0.9", exclusions: ["ch.qos.logback:logback-classic"], repo: "https://repo1.maven.org/maven2" }
   - pypi: { package: "duckdb==1.0.0", repo: "https://pypi.org/simple" }
+  - glob: { include: "src/**" }
 """
     write(tmp_path, "libs_ok.pipeline.yml", y)
     findings = lint_paths([str(tmp_path)])
@@ -48,3 +49,32 @@ libraries:
     assert "DLT425" in codes  # bad maven
     assert "DLT426" in codes  # bad pypi
     assert "DLT420" in codes  # non-object entry
+
+
+def test_libraries_glob_ok(tmp_path: Path):
+    y = """
+name: n
+catalog: c
+schema: s
+libraries:
+  - glob: { include: "src/**" }
+  - glob: { include: "lib/**" }
+"""
+    write(tmp_path, "libs_glob_ok.pipeline.yml", y)
+    findings = lint_paths([str(tmp_path)])
+    assert findings == [], [f"{x.code}:{x.path}" for x in findings]
+
+
+def test_libraries_glob_fail_missing_include(tmp_path: Path):
+    y = """
+name: n
+catalog: c
+schema: s
+libraries:
+  - glob: {}
+  - glob: { include: "src/lib" }  # missing **
+  - glob: "string"  # not an object
+"""
+    write(tmp_path, "libs_glob_bad.pipeline.yml", y)
+    codes = {f.code for f in lint_paths([str(tmp_path)])}
+    assert "DLT427" in codes  # bad glob
