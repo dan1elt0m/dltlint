@@ -52,3 +52,13 @@ def test_check_expected_type_bool():
     check_expected_type("True", "root", "my_bool", bool, f)
     assert len(f) == 1
     assert f[0].code == "DLT101"
+
+
+def test_check_expected_type_allows_template_string():
+    f = []
+    check_expected_type("${var.var}", "root", "my_field", int, f)
+    assert len(f) == 0
+
+    f = []
+    check_expected_type("${var.var}", "root", "my_field", bool, f)
+    assert len(f) == 0
