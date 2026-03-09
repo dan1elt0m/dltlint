@@ -336,8 +336,11 @@ ValueType = str | bool | int | list | dict
 
 
 # ---- Rule runner -----------------------------------------------------------
-def check_expected_type(v: ValueType, root: str, k: str, expected: ValueType, f: list[Finding]) -> bool:
-    """Check if value is of expected type, append to findings if not. Returns True if type matches."""
+def check_expected_type(v: ValueType, root: str, k: str, expected: ValueType, f: list[Finding]) -> None:
+    """Check if value is of expected type, append to findings if not."""
+
+    if isinstance(v, str) and v.startswith("${"):
+        return
 
     if expected is str and not isinstance(v, str):
         f.append(
